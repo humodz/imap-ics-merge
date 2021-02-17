@@ -1,0 +1,18 @@
+{
+  "name": "imap-ics-merge",
+  "version": "1.0.0",
+  "main": "src/main.js",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^7.2.0",
+    "content-type": "^1.0.4",
+    "dicer": "^0.3.0",
+    "fast-safe-stringify": "^2.0.7",
+    "ical": "^0.8.0",
+    "icalendar": "^0.7.1",
+    "imap-simple": "^5.0.0",
+    "inquirer": "^8.0.0",
+    "libmime": "^5.0.0",
+    "quoted-printable": "^1.0.1"
+  }
+}
