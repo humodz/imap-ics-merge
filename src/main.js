@@ -24,7 +24,12 @@ async function cli() {
     .requiredOption('-H, --host <url>', 'IMAP server host')
     .requiredOption('-u, --user <username>', 'IMAP server username')
     .option('-i, --input <folders...>', 'e-mail folders to read from', ['INBOX'])
-    .requiredOption('-o, --output <destination>', 'output file (.ics)');
+    .requiredOption('-o, --output <destination>', 'output file (.ics)')
+    .option(
+      '-n --no-merge',
+      'Do not merge .ics files. In that case, --output should be a directory',
+      false,
+     );
 
   program.exitOverride();
 
@@ -56,6 +61,7 @@ async function main() {
     password: '',
     input: ['INBOX'],
     output: 'data/merged.ics',
+    merge: true,
   };
   /**/
 
@@ -94,14 +100,25 @@ async function main() {
   );
 
   const calendars = bodies.map(b => parseCalendar(b));
-  const result = mergeCalendars(calendars);
 
-  fs.mkdirSync(path.dirname(options.output), { recursive: true });
-  fs.writeFileSync(options.output, result);
+  if (options.merge) {
+    const result = mergeCalendars(calendars);
+
+    fs.mkdirSync(path.dirname(options.output), { recursive: true });
+    fs.writeFileSync(options.output, result);
+  } else {
+    fs.mkdirSync(options.output, { recursive: true });
+
+    calendars.forEach((calendar, i) => {
+      fs.writeFileSync(path.join(options.output, `${i}.ics`), calendar);
+    });
+  }
 }
 
 function parseCalendar(body) {
-  const part = body.find(part => hasContentType(part, 'text/calendar'));
+  const part = body.find(
+    part => hasContentType(part, ['text/calendar', 'text/ics']),
+  );
   const text = decodeBody(part.header, part.data);
   return text;
 }

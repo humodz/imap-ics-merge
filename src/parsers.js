@@ -60,9 +60,9 @@ function decodeBody(header, body) {
   return data.toString(ct.charset || 'utf-8');
 }
 
-function hasContentType(part, type) {
+function hasContentType(part, types) {
   const ct = contentType.parse(part.header['content-type'][0]);
-  return ct.type === type;
+  return types.includes(ct.type);
 }
 
 module.exports = {
