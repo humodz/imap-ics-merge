@@ -36,6 +36,7 @@ async function cli() {
   try {
     program.parse();
   } catch (error) {
+    console.error(); // Write empty line to stderr
     program.outputHelp({ error: true });
     process.exit(1);
   }
